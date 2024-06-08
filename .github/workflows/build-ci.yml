@@ -41,17 +41,20 @@ jobs:
       - name: Maven Clean | Install
         run: mvn --batch-mode --update-snapshots clean install
 
-      #- name: Publish Test Results
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: tests.xml
-      #    path: reports/tests.xml
+      - name: Jacoco Coverage report
+        run: mvn jacoco:report
 
-      #- name: Publish Code Coverage Results
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: coverage.xml
-      #    path: reports/coverage.xml
+      - name: Publish Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-reports
+          path: target/surefire-reports/*.xml
+
+      - name: Publish Code Coverage Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.xml
+          path: target/site/jacoco/jacoco.xml
 
       - name: Update Commit Status With Build Result
         if: ${{ !cancelled() }}

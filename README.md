@@ -1,1 +1,2 @@
-# Py4j
+# PyRunner4j
+Python script executor for Java

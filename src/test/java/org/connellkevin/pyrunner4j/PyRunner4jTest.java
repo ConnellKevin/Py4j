@@ -1,10 +1,10 @@
-package org.connellkevin.py4j;
+package org.connellkevin.pyrunner4j;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class Py4jTest {
+class PyRunner4jTest {
 
     @Test
     void shouldAnswerWithTrue() {

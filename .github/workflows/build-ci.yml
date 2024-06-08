@@ -1,0 +1,63 @@
+name: Java CI/CD
+
+on:
+  push:
+    paths-ignore:
+      - "**/README.md"
+      - "**/CHANGELOG.md"
+      - "**/LICENSE"
+
+env:
+  jdk: 21
+
+
+permissions:
+  statuses: write
+  pull-requests: write
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build Information
+        run: echo "Running project CI [Java ${{env.jdk}} on ${{runner.os}}]"
+
+      - name: Set Commit Status to Pending
+        uses: ouzi-dev/commit-status-updater@v2
+
+      - name: Checkout Code From "${{github.ref_name}}"
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{env.jdk}}
+        uses: actions/setup-java@v4
+        with:
+          java-version: '${{env.jdk}}'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Maven Clean | Install
+        run: mvn --batch-mode --update-snapshots clean install
+
+      - name: Jacoco Coverage report
+        run: mvn jacoco:report
+
+      - name: Publish Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-reports
+          path: target/surefire-reports/*.xml
+
+      - name: Publish Code Coverage Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.xml
+          path: target/site/jacoco/jacoco.xml
+
+      - name: Update Commit Status With Build Result
+        if: ${{ !cancelled() }}
+        uses: ouzi-dev/commit-status-updater@v2
+        with:
+          status: "${{ job.status }}"

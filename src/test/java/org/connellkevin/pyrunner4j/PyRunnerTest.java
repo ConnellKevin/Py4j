@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PyRunner4jTest {
+class PyRunnerTest {
 
     @Test
     void shouldAnswerWithTrue() {
